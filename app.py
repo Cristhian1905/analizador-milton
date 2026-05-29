@@ -28,28 +28,20 @@ st.title("📊 Analizador de resultados Milton Ochoa")
 # CONVERTIR XLS -> XLSX
 # =====================================================
 def convertir_xls_si_es_necesario(ruta):
-
     ruta = Path(ruta)
 
+    # Si ya es xlsx, no hacer nada
     if ruta.suffix.lower() == ".xlsx":
         return str(ruta)
 
+    # Leer archivo xls con pandas (Streamlit Cloud sí lo soporta)
+    df = pd.read_excel(ruta)
+
+    # Convertir a xlsx temporal
     nuevo_archivo = ruta.with_suffix(".xlsx")
-
-    comando = [
-        "libreoffice",
-        "--headless",
-        "--convert-to",
-        "xlsx",
-        str(ruta),
-        "--outdir",
-        str(ruta.parent)
-    ]
-
-    subprocess.run(comando)
+    df.to_excel(nuevo_archivo, index=False)
 
     return str(nuevo_archivo)
-
 
 # =====================================================
 # DETECTAR COLUMNAS
